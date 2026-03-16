@@ -611,8 +611,8 @@ async function checkSingleKeywordWithWarp(keyword, domain, uuleCode, maxPages = 
         }
     }
 
-    // Human-like delay between keywords (3-7 seconds random)
-    const kwDelay = 3000 + Math.random() * 4000;
+    // Human-like delay between keywords (5-8 seconds for parallel safety)
+    const kwDelay = 5000 + Math.random() * 3000;
     console.log(`[Checker] ⏳ Waiting ${(kwDelay / 1000).toFixed(1)}s before next keyword...`);
     await sleep(kwDelay);
 
@@ -670,9 +670,10 @@ async function startChecker({ project, domain, keywords, options = {}, db = null
                 const chunk = keywords.slice(chunkStart, chunkStart + chunkSize);
                 console.log(`[Checker] Chunk ${Math.floor(chunkStart / chunkSize) + 1}: keywords ${chunkStart + 1}-${chunkStart + chunk.length}`);
 
-                // Run chunk in parallel
+                // Run chunk in parallel — stagger start to avoid simultaneous Google hits
                 const promises = chunk.map((kw, localIdx) =>
-                    checkSingleKeywordWithWarp(kw, domain, uuleCode, maxPages)
+                    sleep(localIdx * (2000 + Math.random() * 2000)) // Stagger: 0s, 2-4s, 4-8s...
+                        .then(() => checkSingleKeywordWithWarp(kw, domain, uuleCode, maxPages))
                         .then(result => {
                             // If skipped due to stop, don't emit
                             if (result.skipped) return result;
@@ -745,9 +746,11 @@ async function startChecker({ project, domain, keywords, options = {}, db = null
                     break;
                 }
 
-                // Small delay between chunks to avoid detection
+                // Delay between chunks — longer to let Google cool down
                 if (chunkStart + chunkSize < keywords.length) {
-                    await sleep(5000 + Math.random() * 5000); // 5-10s between chunks
+                    const chunkDelay = 8000 + Math.random() * 7000; // 8-15s between chunks
+                    console.log(`[Checker] ⏳ Chunk delay: ${(chunkDelay / 1000).toFixed(1)}s before next chunk...`);
+                    await sleep(chunkDelay);
                 }
             }
 

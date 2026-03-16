@@ -9,6 +9,14 @@ It enforces strict adherence to **Semantic SEO**, **Competitor Benchmarking**, a
 
 **Command:** `/WIN-Flavor-seo [keyword]`
 
+**Global Quality Rules:**
+1. **Content Freshness**: MUST use `search_web` to verify the latest regulations, decrees, and industry updates before writing. Always reference the most current legal documents (e.g., latest Nghị định, Thông tư, VBHN). Never rely on outdated information.
+2. **No Emoji**: Articles must NOT contain any emoji characters (⭐, ⚠️, 🔥, etc.). Use text labels like **(MỚI)**, **Lưu ý**, **Quan trọng** instead.
+3. **No Em Dash**: Never use em dash (—) in articles. Always use short dash (-) instead.
+4. **Key Takeaways**: Every article MUST include a `[key_takeaways]...[/key_takeaways]` shortcode block after the intro paragraph (before the first image). Contains 5-7 bullet points summarizing the most important facts. MUST have a blank line before `[/key_takeaways]`.
+5. **No Brand Prefix in Expert Remarks**: Blockquote expert remarks must NOT be prefixed with brand name (e.g., "Chuyên gia WIN Flavor:", "GOHA Note:"). The blockquote stands alone as objective expert insight.
+6. **Keyword Density**: The **primary keyword** MUST appear **5-10 times** in the article body (excluding metadata table), scaled by content length. All **secondary keywords** and **semantic/LSI keywords** from `research.md` MUST also appear at least once naturally in the article. Verify keyword presence during the Audit phase.
+
 ---
 
 ## 1. Preparation
@@ -78,6 +86,25 @@ It enforces strict adherence to **Semantic SEO**, **Competitor Benchmarking**, a
     2. Maintain "Professional but Simple" voice (Grade 5 readability, No Fluff) as per `persona-WIN-Flavor-skill.md`. 
     3. Follow the "Ingredient-First" rule.
 - **Output**: `article.md` (Draft 1)
+- **MANDATORY**: The article MUST start with an **SEO Metadata Table** before the H1 heading. Use this exact format (use short dashes `-`/`--` for outline hierarchy, never em dashes):
+
+```markdown
+| | |
+|---|---|
+| **Keyword chính** | [primary keyword] |
+| **Keyword phụ** | [secondary keyword 1] |
+| | [secondary keyword 2] |
+| | ... |
+| **Slug** | [keyword-slug] |
+| **Meta title** | [optimized title with keyword + freshness year] |
+| **Meta description** | [compelling 155-char description with keyword] |
+| **Outline** | H1: [title] |
+| | - H2: [section] |
+| | -- H3: [subsection] |
+| | ... |
+
+---
+```
 
 ## 7. Phase 6: WIN Flavor Brand Calibration
 **Goal**: Polish the draft into a true WIN Flavor asset.
@@ -89,21 +116,10 @@ It enforces strict adherence to **Semantic SEO**, **Competitor Benchmarking**, a
     2.  **Simplicity Audit**: Enforce Grade 5 readability. Remove jargon/fluff unless explained simply.
     3.  **Tone Audit**: Apply "Expert Scientist" and "Solution-Oriented" filters.
     4.  **Signature**: Ensure correct Signature from `central-entity-WIN-Flavor.md`.
-    5.  **Expert Remarks**: Inject 1-2 `> **Chuyên gia WIN Flavor:**` blocks (as defined in `persona-WIN-Flavor-skill.md`).
+    5.  **Expert Remarks**: Inject 1-2 blockquotes containing expert advice or insights. Do NOT prefix with "Chuyên gia WIN Flavor:" or any brand name. The blockquote should stand alone as objective expert insight.
 - **Output**: `article.md` (WIN Flavor Branded Version)
 
-## 8. Phase 7: Visual Enhancement
-**Goal**: Add visual depth with relevant F&B R&D and scientific images.
-
-- **Skill**: `.agent/skills/visualizing-content/SKILL.md`
-- **Input**: `article.md` (WIN Flavor Branded Version)
-- **Action**:
-    1.  **Analyze**: Identify key sections for visual aid.
-    2.  **Search**: Find high-quality, relevant images (or placeholders).
-    3.  **Insert**: Add `![Alt](Url)` to `article.md`.
-- **Output**: `article.md` (Visualized Version)
-
-## 9. Phase 8: Fact-Checking & Deep Research (Optimized)
+## 8. Phase 7: Fact-Checking & Deep Research (Optimized)
 **Goal**: 100% scientific accuracy via targeted validation.
 
 - **Skill**: `.agent/skills/rechecking-facts/SKILL.md`

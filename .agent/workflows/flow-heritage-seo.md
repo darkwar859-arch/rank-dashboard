@@ -9,6 +9,14 @@ It enforces strict adherence to **Semantic SEO**, **Cultural Depth**, and the **
 
 **Command:** `/heritage-seo [keyword]`
 
+**Global Quality Rules:**
+1. **Content Freshness**: MUST use `search_web` to verify the latest cultural events, travel information, and destination details before writing. Always reference the most current sources. Never rely on outdated information.
+2. **No Emoji**: Articles must NOT contain any emoji characters (⭐, ⚠️, 🔥, etc.). Use text labels like **(MỚI)**, **Lưu ý**, **Quan trọng** instead.
+3. **No Em Dash**: Never use em dash (—) in articles. Always use short dash (-) instead.
+4. **Key Takeaways**: Every article MUST include a `[key_takeaways]...[/key_takeaways]` shortcode block after the intro paragraph (before the first image). Contains 5-7 bullet points summarizing the most important facts. MUST have a blank line before `[/key_takeaways]`.
+5. **No Brand Prefix in Expert Remarks**: Blockquote expert remarks must NOT be prefixed with brand name. The blockquote stands alone as objective expert insight.
+6. **Keyword Density**: The **primary keyword** MUST appear **5-10 times** in the article body (excluding metadata table), scaled by content length. All **secondary keywords** and **semantic/LSI keywords** from `research.md` MUST also appear at least once naturally in the article. Verify keyword presence during the Audit phase.
+
 ---
 
 ## 1. Preparation
@@ -47,6 +55,7 @@ It enforces strict adherence to **Semantic SEO**, **Cultural Depth**, and the **
 - **Skill**: `.agent/skills/generating-outlines/SKILL.md`
 - **Inputs**: `search-intent.md`, `research.md`, `competitor-insights.md`, `Persona Brand/Heritage/central-entity-Heritage.md`.
 - **Constraint**: Every outline MUST have a section dedicated to "Cultural Significance" or "Heritage Insight".
+- **Constraint**: If listing travel destinations, the outline MUST include a comprehensive list (minimum 8-12 locations) to ensure topical authority.
 - **Output**: `outline.md`
 
 ## 6. Phase 5: Aesthetic Writing (Drafting)
@@ -55,7 +64,27 @@ It enforces strict adherence to **Semantic SEO**, **Cultural Depth**, and the **
 - **Skill**: `.agent/skills/writing-semantic-content/SKILL.md`
 - **Inputs**: `outline.md`, `research.md`, `Persona Brand/Heritage Vietnam Airlines/source-context-Heritage.md`.
 - **Constraint**: Use the rich, descriptive lexicon defined in `persona-Heritage-skill.md`. 
+- **Constraint**: Every listed destination/location MUST explicitly include a detailed, exact address in its Hard Data section (e.g., number, street, ward).
 - **Output**: `article.md` (Draft 1)
+- **MANDATORY**: The article MUST start with an **SEO Metadata Table** before the H1 heading. Use this exact format (use short dashes `-`/`--` for outline hierarchy, never em dashes):
+
+```markdown
+| | |
+|---|---|
+| **Keyword chính** | [primary keyword] |
+| **Keyword phụ** | [secondary keyword 1] |
+| | [secondary keyword 2] |
+| | ... |
+| **Slug** | [keyword-slug] |
+| **Meta title** | [optimized title with keyword + freshness year] |
+| **Meta description** | [compelling 155-char description with keyword] |
+| **Outline** | H1: [title] |
+| | - H2: [section] |
+| | -- H3: [subsection] |
+| | ... |
+
+---
+```
 
 ## 7. Phase 6: Heritage Brand Calibration
 **Goal**: Polish the draft into a true Heritage masterpiece.
@@ -67,14 +96,7 @@ It enforces strict adherence to **Semantic SEO**, **Cultural Depth**, and the **
     2. **Aviation Integration**: If relevant, subtly mention Vietnam Airlines' flights to the destination.
 - **Output**: `article.md` (Heritage Branded Version)
 
-## 8. Phase 7: Visual Enhancement
-**Goal**: Add premium visual context.
-
-- **Skill**: `.agent/skills/visualizing-content/SKILL.md`
-- **Action**: Find high-quality, "artistic" images that match the magazine's aesthetic.
-- **Output**: `article.md` (Visualized Version)
-
-## 9. Phase 8: Fact-Checking & Deep Research
+## 8. Phase 7: Fact-Checking & Deep Research
 **Goal**: Verify historical dates, cultural terminology, and aviation details.
 
 - **Skill**: `.agent/skills/rechecking-facts/SKILL.md`

@@ -64,6 +64,11 @@ Follow the structure strictly:
 7.  **Short Paragraph Rule (UX & Readability)**:
     *   **Strict Limit**: Single paragraphs should NOT exceed **4 lines** in the editor.
     *   **Action**: Break down complex ideas into 2-3 shorter paragraphs or use bullet points to avoid "walls of text" that discourage readers.
+8.  **Keyword Density**:
+    *   The **primary keyword** MUST appear **5-10 times** in the article body (excluding metadata table), scaled by content length.
+    *   All **secondary keywords** listed in the SEO metadata table MUST appear at least once naturally in the article.
+    *   Key **semantic/LSI keywords** from `research.md` clusters MUST also be present.
+    *   Self-check: After writing, count occurrences and inject missing keywords naturally.
 
 ### Phase 4: Self-Correction
 

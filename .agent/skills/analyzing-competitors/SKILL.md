@@ -68,6 +68,14 @@ I have analyzed the following top competitors and saved their detailed outlines 
 2.  [Title](competitors/competitor_2_domain.md)
 3.  [Title](competitors/competitor_3_domain.md)
 
+## SEO-Useful Headings from Competitors
+Review ALL H2/H3 headings across competitors and classify:
+| Heading Topic | Source | Classification | Notes |
+|--------------|--------|---------------|-------|
+| [Topic] | Competitor [N] | MUST INCLUDE / NICE TO HAVE / SKIP | [Why] |
+
+*MUST INCLUDE items will be integrated into the outline in Phase 4.*
+
 ## Strategic Analysis
 *   **Common Angles**: [Patterns common across all 3]
 *   **Content Gaps**: [What crucial topics did they ALL miss?]
@@ -87,3 +95,6 @@ I have analyzed the following top competitors and saved their detailed outlines 
 
 □ Did I exclude generic sites?
   → No Shopee, no Youtube. Only content competitors.
+
+□ Did I classify competitor headings by SEO usefulness?
+  → Every H2/H3 must be tagged as MUST INCLUDE, NICE TO HAVE, or SKIP. This feeds directly into the outline generation phase.

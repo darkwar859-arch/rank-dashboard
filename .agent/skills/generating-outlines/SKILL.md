@@ -33,6 +33,31 @@ ELSE:
 *   **Primary Entity**: [Main Subject]
 *   **Related Entities**: [5-10 key entities to mention]
 
+### Phase 1.5: Competitor Heading Integration
+
+#### Purpose
+Ensure the outline covers all SEO-valuable topics that top competitors are ranking for.
+
+#### Actions
+```
+IF `competitor-insights.md` AND `competitors/` directory exist:
+    → Load all competitor files: competitors/competitor_[n]_[domain].md
+    → Extract ALL H2 and H3 headings from each competitor
+    → Classify each heading as:
+        - [MUST INCLUDE]: Topic is essential for SEO coverage (e.g., definitions, classifications, applications, selection guides, common structures)
+        - [NICE TO HAVE]: Topic adds depth but is not critical
+        - [SKIP]: Topic is purely promotional or brand-specific to the competitor
+    → Integrate [MUST INCLUDE] headings into the outline as H2 or H3 sections
+    → Adapt heading language with deeper technical content and brand persona voice
+    → Mark integrated items with [FROM COMPETITOR] tag for traceability
+ELSE:
+    → Proceed without competitor data (log warning).
+```
+
+#### Constraint
+- Do NOT copy competitor headings verbatim. Rewrite with added depth, better structure, and brand voice.
+- Competitor topics should be merged with semantic research clusters — not added as standalone orphan sections.
+
 ### Phase 2: Content Structure Generation
 
 #### Structure Template
@@ -97,3 +122,6 @@ Generate the outline in Markdown format.
 
 □ Did I include a specific FAQ section for Featured Snippets?
   → Mandatory for voice search/P0.
+
+□ Did I review and integrate useful competitor headings?
+  → Cross-check ALL competitor H2/H3 headings against the outline. Any SEO-useful topic from competitors MUST appear in the outline (adapted, not copied). Missing a key competitor topic means missing ranking opportunities.

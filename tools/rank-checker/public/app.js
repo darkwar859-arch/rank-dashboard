@@ -1474,7 +1474,7 @@ function startProgressPolling() {
                 document.getElementById('aiProgress').style.display = 'none';
                 document.getElementById('aiBtn').classList.remove('loading');
                 document.getElementById('aiBtn').disabled = false;
-                showToast(`AI phân tích xong: ${prog.topics} topics, ${prog.suggestions} gợi ý`, 'success');
+                showToast(`AI phân tích xong via ${prog.provider || 'AI'}!`, 'success');
                 loadAiInsights();
             } else if (prog.status === 'error') {
                 clearInterval(aiPollInterval);

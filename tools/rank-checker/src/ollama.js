@@ -134,16 +134,30 @@ async function analyzeKeywords(keywords, rankings) {
 Keywords data (keyword | rank | url):
 ${keywordData.map(k => `- "${k.keyword}" | Rank: ${k.rank} | ${k.url}`).join('\n')}
 
-Respond in JSON format with this structure:
+Respond in JSON format with EXACTLY this structure:
 {
-  "summary": "Brief overview of the SEO performance",
-  "topPerformers": [{"keyword": "...", "insight": "..."}],
-  "needsImprovement": [{"keyword": "...", "suggestion": "..."}],
-  "quickWins": [{"keyword": "...", "action": "..."}],
-  "topicClusters": [{"topic": "...", "keywords": ["..."], "strategy": "..."}],
-  "contentGaps": ["topic suggestions that are missing"]
+  "topics": [
+    {
+      "name": "Topic cluster name",
+      "priority": "high",
+      "keywords": ["keyword1", "keyword2"],
+      "suggestedTitle": "Suggested article title",
+      "reason": "Why this topic matters"
+    }
+  ],
+  "suggestions": [
+    {
+      "type": "new_content",
+      "title": "Action title",
+      "description": "What to do and why",
+      "priority": "high",
+      "keywords": ["related keywords"]
+    }
+  ]
 }
 
+Types can be: new_content, optimize, merge, internal_link.
+Priority can be: high, medium, low.
 Focus on Vietnamese market SEO. Be specific and actionable. Respond in Vietnamese.`;
 
     return await callOllama(prompt);

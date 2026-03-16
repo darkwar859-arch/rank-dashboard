@@ -98,15 +98,8 @@ async function loadRankings() {
         } else {
             document.getElementById('noData').classList.add('hidden');
             renderTable();
-            // Re-apply current view after data refresh
-            if (currentView === 'url') {
-                document.querySelector('.table-wrapper').classList.add('hidden');
-                document.getElementById('urlGroupView').classList.remove('hidden');
-                renderUrlGroupView();
-            } else {
-                document.querySelector('.table-wrapper').classList.remove('hidden');
-                document.getElementById('urlGroupView').classList.add('hidden');
-            }
+            // Re-apply current view (table or url-group) after data refresh
+            switchView(currentView);
         }
 
         await loadStats();

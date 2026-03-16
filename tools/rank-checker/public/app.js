@@ -1498,67 +1498,122 @@ function renderAiInsights(insights) {
     const dateEl = document.getElementById('aiAnalyzedAt');
     if (insights.analyzedAt) {
         const d = new Date(insights.analyzedAt);
-        dateEl.textContent = `Phân tích lúc: ${d.toLocaleString('vi-VN')} • ${insights.totalKeywords || 0} keywords`;
+        dateEl.textContent = `Phân tích lúc: ${d.toLocaleString('vi-VN')}`;
     }
 
-    // Render topics
-    const topicsEl = document.getElementById('aiTopics');
+    // Support both Gemini format (topics/suggestions) and Ollama format (topicClusters/quickWins/etc)
     const topics = insights.topics || [];
-    if (topics.length > 0) {
-        topicsEl.innerHTML = `<div class="ai-topics-title">📊 Nhóm chủ đề (${topics.length})</div>` +
-            topics.map((t, i) => {
-                const kws = (t.keywords || []).slice(0, 15);
-                return `
-                <div class="ai-topic-card" id="aitopic-${i}" onclick="toggleAiTopic(${i})">
-                    <div class="ai-topic-header">
-                        <span class="ai-topic-name">${escapeHtml(t.name || 'Unnamed')}</span>
-                        <div class="ai-topic-meta">
-                            <span class="ai-priority ${t.priority || 'low'}">${t.priority || 'low'}</span>
-                            <span class="ai-topic-kw-count">${(t.keywords || []).length} kw</span>
-                            <span class="ai-topic-chevron">▶</span>
-                        </div>
-                    </div>
-                    <div class="ai-topic-body">
-                        ${t.suggestedTitle ? `<div class="ai-topic-title-suggestion">📝 ${escapeHtml(t.suggestedTitle)}</div>` : ''}
-                        ${t.reason ? `<div class="ai-topic-reason">${escapeHtml(t.reason)}</div>` : ''}
-                        <div class="ai-topic-keywords">
-                            ${kws.map(k => `<span class="ai-kw-tag">${escapeHtml(k)}</span>`).join('')}
-                            ${(t.keywords || []).length > 15 ? `<span class="ai-kw-tag">+${(t.keywords || []).length - 15} more</span>` : ''}
-                        </div>
-                    </div>
-                </div>`;
-            }).join('');
-    } else {
-        topicsEl.innerHTML = '';
+    const topicClusters = insights.topicClusters || [];
+    const suggestions = insights.suggestions || [];
+    const quickWins = insights.quickWins || [];
+    const needsImprovement = insights.needsImprovement || [];
+    const contentGaps = insights.contentGaps || [];
+    const summary = insights.summary || '';
+
+    const topicsEl = document.getElementById('aiTopics');
+    const sugEl = document.getElementById('aiSuggestions');
+
+    let html = '';
+
+    // Summary
+    if (summary) {
+        html += `<div style="background:var(--card-bg,#fff);border-radius:10px;padding:16px;margin-bottom:16px;border-left:4px solid var(--green,#22c55e)">
+            <strong>📊 Tổng quan:</strong> ${escapeHtml(summary)}
+        </div>`;
     }
 
-    // Render suggestions
-    const sugEl = document.getElementById('aiSuggestions');
-    const sugs = insights.suggestions || [];
-    if (sugs.length > 0) {
-        const icons = {
-            new_content: '✍️',
-            optimize: '🔧',
-            merge: '🔗',
-            internal_link: '🔀',
-        };
-        sugEl.innerHTML = `<div class="ai-suggestions-title">💡 Gợi ý hành động (${sugs.length})</div>` +
-            sugs.map(s => {
-                const icon = icons[s.type] || '💡';
-                const kws = (s.keywords || []).slice(0, 5);
-                return `
-                <div class="ai-suggestion-card">
-                    <div class="ai-suggestion-icon">${icon}</div>
-                    <div class="ai-suggestion-content">
-                        <div class="ai-suggestion-title">${escapeHtml(s.title || '')} <span class="ai-priority ${s.priority || 'low'}">${s.priority || 'low'}</span></div>
-                        <div class="ai-suggestion-desc">${escapeHtml(s.description || '')}</div>
-                        ${kws.length > 0 ? `<div class="ai-suggestion-keywords">${kws.map(k => `<span class="ai-kw-tag">${escapeHtml(k)}</span>`).join('')}</div>` : ''}
+    // Gemini-style topics
+    if (topics.length > 0) {
+        html += `<div class="ai-topics-title">📊 Nhóm chủ đề (${topics.length})</div>`;
+        topics.forEach((t, i) => {
+            const kws = (t.keywords || []).slice(0, 15);
+            html += `<div class="ai-topic-card" id="aitopic-${i}" onclick="toggleAiTopic(${i})">
+                <div class="ai-topic-header">
+                    <span class="ai-topic-name">${escapeHtml(t.name || 'Unnamed')}</span>
+                    <div class="ai-topic-meta">
+                        <span class="ai-priority ${t.priority || 'low'}">${t.priority || ''}</span>
+                        <span class="ai-topic-kw-count">${(t.keywords || []).length} kw</span>
+                        <span class="ai-topic-chevron">▶</span>
                     </div>
-                </div>`;
-            }).join('');
-    } else {
-        sugEl.innerHTML = '';
+                </div>
+                <div class="ai-topic-body">
+                    ${t.suggestedTitle ? `<div class="ai-topic-title-suggestion">📝 ${escapeHtml(t.suggestedTitle)}</div>` : ''}
+                    ${t.reason ? `<div class="ai-topic-reason">${escapeHtml(t.reason)}</div>` : ''}
+                    <div class="ai-topic-keywords">${kws.map(k => `<span class="ai-kw-tag">${escapeHtml(k)}</span>`).join('')}</div>
+                </div>
+            </div>`;
+        });
     }
+
+    // Ollama-style topic clusters
+    if (topicClusters.length > 0) {
+        html += `<div style="font-weight:600;font-size:15px;margin:16px 0 8px">📊 Nhóm chủ đề (${topicClusters.length})</div>`;
+        topicClusters.forEach((t, i) => {
+            const kws = (t.keywords || []).slice(0, 10);
+            html += `<div style="background:var(--card-bg,#fff);border-radius:10px;padding:14px;margin-bottom:10px;border-left:4px solid var(--blue,#3b82f6)">
+                <strong>${escapeHtml(t.topic || '')}</strong>
+                <div style="color:var(--text-dim);font-size:13px;margin:6px 0">${escapeHtml(t.strategy || '')}</div>
+                <div style="display:flex;flex-wrap:wrap;gap:4px">${kws.map(k => `<span class="ai-kw-tag">${escapeHtml(k)}</span>`).join('')}</div>
+            </div>`;
+        });
+    }
+
+    topicsEl.innerHTML = html;
+
+    // Suggestions section
+    let sugHtml = '';
+
+    // Gemini-style suggestions
+    if (suggestions.length > 0) {
+        const icons = { new_content: '✍️', optimize: '🔧', merge: '🔗', internal_link: '🔀' };
+        sugHtml += `<div class="ai-suggestions-title">💡 Gợi ý hành động (${suggestions.length})</div>`;
+        suggestions.forEach(s => {
+            const icon = icons[s.type] || '💡';
+            const kws = (s.keywords || []).slice(0, 5);
+            sugHtml += `<div class="ai-suggestion-card">
+                <div class="ai-suggestion-icon">${icon}</div>
+                <div class="ai-suggestion-content">
+                    <div class="ai-suggestion-title">${escapeHtml(s.title || '')} <span class="ai-priority ${s.priority || 'low'}">${s.priority || ''}</span></div>
+                    <div class="ai-suggestion-desc">${escapeHtml(s.description || '')}</div>
+                    ${kws.length > 0 ? `<div class="ai-suggestion-keywords">${kws.map(k => `<span class="ai-kw-tag">${escapeHtml(k)}</span>`).join('')}</div>` : ''}
+                </div>
+            </div>`;
+        });
+    }
+
+    // Quick Wins (Ollama)
+    if (quickWins.length > 0) {
+        sugHtml += `<div style="font-weight:600;font-size:15px;margin:16px 0 8px">⚡ Quick Wins (${quickWins.length})</div>`;
+        quickWins.forEach(q => {
+            sugHtml += `<div style="background:var(--card-bg,#fff);border-radius:10px;padding:14px;margin-bottom:8px;border-left:4px solid var(--green,#22c55e)">
+                <strong>${escapeHtml(q.keyword || '')}</strong>
+                <div style="color:var(--text-dim);font-size:13px;margin-top:4px">${escapeHtml(q.action || '')}</div>
+            </div>`;
+        });
+    }
+
+    // Needs Improvement (Ollama)
+    if (needsImprovement.length > 0) {
+        sugHtml += `<div style="font-weight:600;font-size:15px;margin:16px 0 8px">🔧 Cần cải thiện (${needsImprovement.length})</div>`;
+        needsImprovement.forEach(n => {
+            sugHtml += `<div style="background:var(--card-bg,#fff);border-radius:10px;padding:14px;margin-bottom:8px;border-left:4px solid var(--yellow,#eab308)">
+                <strong>${escapeHtml(n.keyword || '')}</strong>
+                <div style="color:var(--text-dim);font-size:13px;margin-top:4px">${escapeHtml(n.suggestion || '')}</div>
+            </div>`;
+        });
+    }
+
+    // Content Gaps (Ollama)
+    if (contentGaps.length > 0) {
+        sugHtml += `<div style="font-weight:600;font-size:15px;margin:16px 0 8px">🔍 Content Gaps (${contentGaps.length})</div>`;
+        sugHtml += `<div style="display:flex;flex-wrap:wrap;gap:6px">`;
+        contentGaps.forEach(g => {
+            sugHtml += `<span class="ai-kw-tag" style="background:var(--red,#ef4444);color:#fff">${escapeHtml(typeof g === 'string' ? g : g.topic || '')}</span>`;
+        });
+        sugHtml += `</div>`;
+    }
+
+    sugEl.innerHTML = sugHtml;
 }
 
 function toggleAiTopic(idx) {

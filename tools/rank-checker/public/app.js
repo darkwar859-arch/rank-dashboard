@@ -97,8 +97,16 @@ async function loadRankings() {
             document.querySelector('.table-wrapper').classList.add('hidden');
         } else {
             document.getElementById('noData').classList.add('hidden');
-            document.querySelector('.table-wrapper').classList.remove('hidden');
             renderTable();
+            // Re-apply current view after data refresh
+            if (currentView === 'url') {
+                document.querySelector('.table-wrapper').classList.add('hidden');
+                document.getElementById('urlGroupView').classList.remove('hidden');
+                renderUrlGroupView();
+            } else {
+                document.querySelector('.table-wrapper').classList.remove('hidden');
+                document.getElementById('urlGroupView').classList.add('hidden');
+            }
         }
 
         await loadStats();
